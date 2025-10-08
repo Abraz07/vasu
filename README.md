@@ -4,7 +4,7 @@ It uses **React Router v6**.
 
 ---
 
-### 🧩 Folder structure
+### 🧩 Folder structure of rw-tool
 
 ```
 src/
@@ -88,14 +88,16 @@ export default function RectComp() {
         value={length}
         onChange={(e) => setLength(e.target.value)}
       />
-      <br /><br />
+      <br />
+      <br />
       <input
         type="number"
         placeholder="Enter Breadth"
         value={breadth}
         onChange={(e) => setBreadth(e.target.value)}
       />
-      <br /><br />
+      <br />
+      <br />
       <button onClick={handleSubmit}>Calculate</button>
     </div>
   );
