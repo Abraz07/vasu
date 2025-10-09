@@ -1,1 +1,288 @@
 <h1>Hello World!</h1>
+
+Got it 👍 — you want this React code **split into separate files** for better structure and maintainability.
+
+Here’s how you can organize it cleanly into a typical React project structure:
+
+---
+
+## 📁 Folder Structure
+
+```
+src/
+├── components/
+│   ├── LandingPage.jsx
+│   ├── LoginPage.jsx
+│   ├── SignupPage.jsx
+├── styles/
+│   └── global.css
+├── App.jsx
+└── index.js
+```
+
+---
+
+## 🧩 `src/App.jsx`
+
+```jsx
+import React, { useState } from 'react';
+import LandingPage from './components/LandingPage';
+import LoginPage from './components/LoginPage';
+import SignupPage from './components/SignupPage';
+import './styles/global.css';
+
+const App = () => {
+  const [currentPage, setCurrentPage] = useState('landing');
+  const [userRole, setUserRole] = useState(null);
+
+  const navigate = (page, role = null) => {
+    setCurrentPage(page);
+    setUserRole(role);
+  };
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'landing':
+        return <LandingPage navigate={navigate} />;
+      case 'login':
+        return <LoginPage role={userRole} navigate={navigate} />;
+      case 'signup':
+        return <SignupPage role={userRole} navigate={navigate} />;
+      default:
+        return <LandingPage navigate={navigate} />;
+    }
+  };
+
+  return <div className="app">{renderPage()}</div>;
+};
+
+export default App;
+```
+
+---
+
+## 🧭 `src/components/LandingPage.jsx`
+
+```jsx
+import React from 'react';
+import { User, Settings, Wrench } from 'lucide-react';
+
+const LandingPage = ({ navigate }) => {
+  const roles = [
+    {
+      id: 'user',
+      title: 'User',
+      description: 'Access organizational reports and updates.',
+      icon: User,
+      color: '#38D200',
+      bgColor: 'rgba(56, 210, 0, 0.1)',
+    },
+    {
+      id: 'admin',
+      title: 'Admin',
+      description: 'Manage users, reports, and approvals.',
+      icon: Settings,
+      color: '#0473EA',
+      bgColor: 'rgba(4, 115, 234, 0.1)',
+    },
+    {
+      id: 'ops',
+      title: 'Ops',
+      description: 'Handle data syncing and storage operations.',
+      icon: Wrench,
+      color: '#38D200',
+      bgColor: 'rgba(56, 210, 0, 0.1)',
+    },
+  ];
+
+  return (
+    <div className="landing-container">
+      <div className="landing-content">
+        <div className="landing-header">
+          <h1 className="landing-title">
+            Welcome to <span className="brand-name">RW Tool</span>
+          </h1>
+          <p className="landing-subtitle">
+            A centralized platform for report subscription and management.
+          </p>
+        </div>
+
+        <div className="role-cards">
+          {roles.map((role) => (
+            <div key={role.id} className="role-card">
+              <div className="role-icon-wrapper" style={{ backgroundColor: role.bgColor }}>
+                <role.icon size={40} style={{ color: role.color }} />
+              </div>
+              <h2 className="role-title">{role.title}</h2>
+              <p className="role-description">{role.description}</p>
+              <button
+                className="role-button"
+                style={{ backgroundColor: role.color }}
+                onClick={() => navigate('login', role.id)}
+              >
+                Login
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <footer className="landing-footer">© 2025 RW Tool — All Rights Reserved.</footer>
+      </div>
+    </div>
+  );
+};
+
+export default LandingPage;
+```
+
+---
+
+## 🔐 `src/components/LoginPage.jsx`
+
+```jsx
+import React, { useState } from 'react';
+import { ArrowRight, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+
+const LoginPage = ({ role, navigate }) => {
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const roleConfig = {
+    user: { color: '#38D200', title: 'User Login' },
+    admin: { color: '#0473EA', title: 'Admin Login' },
+    ops: { color: '#38D200', title: 'Ops Login' },
+  };
+
+  const config = roleConfig[role];
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.email) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
+    if (!formData.password) newErrors.password = 'Password is required';
+    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    return newErrors;
+  };
+
+  const handleSubmit = () => {
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length === 0) {
+      alert(`${config.title} successful! (Demo)`);
+    } else setErrors(newErrors);
+  };
+
+  return (
+    <div className="auth-container">
+      <div className="auth-box">
+        <button className="back-button" onClick={() => navigate('landing')}>
+          ← Back
+        </button>
+
+        <div className="auth-header">
+          <h1 className="auth-title">{config.title}</h1>
+          <p className="auth-subtitle">Enter your credentials to continue</p>
+        </div>
+
+        <div className="auth-form">
+          <div className="form-group">
+            <label>Email Address</label>
+            <div className="input-wrapper">
+              <Mail size={20} className="input-icon" />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                placeholder="user@example.com"
+                className={`form-input ${errors.email ? 'error' : ''}`}
+                onChange={handleChange}
+              />
+            </div>
+            {errors.email && <span className="error-text">{errors.email}</span>}
+          </div>
+
+          <div className="form-group">
+            <label>Password</label>
+            <div className="input-wrapper">
+              <Lock size={20} className="input-icon" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={formData.password}
+                placeholder="••••••••"
+                className={`form-input ${errors.password ? 'error' : ''}`}
+                onChange={handleChange}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+            {errors.password && <span className="error-text">{errors.password}</span>}
+          </div>
+
+          <button className="submit-button" style={{ backgroundColor: config.color }} onClick={handleSubmit}>
+            Login <ArrowRight size={20} />
+          </button>
+        </div>
+
+        <div className="auth-footer">
+          <p>
+            Don’t have an account?{' '}
+            <button className="link-button" style={{ color: config.color }} onClick={() => navigate('signup', role)}>
+              Sign up
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;
+```
+
+---
+
+## 🧾 `src/components/SignupPage.jsx`
+
+*(This is identical to your original but modularized — same validation and layout)*
+You can copy your `SignupPage` component from your code and paste it here.
+
+---
+
+## 🎨 `src/styles/global.css`
+
+This contains the entire big CSS block you had at the bottom of your original file.
+Just copy all of it into a new file:
+
+```css
+/* Paste all your CSS styles here from the "styles" constant */
+```
+
+---
+
+## ⚙️ `src/index.js`
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+```
+
+---
+
+Would you like me to also **add routing with React Router (v6)** instead of your manual `navigate` function?
+That would make the app scalable with proper URLs (like `/login/user` or `/signup/admin`).
