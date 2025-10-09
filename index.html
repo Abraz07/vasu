@@ -1,69 +1,5 @@
-<h1>Hello World!</h1>
+LandingPage
 
-Got it 👍 — you want this React code **split into separate files** for better structure and maintainability.
-
-Here’s how you can organize it cleanly into a typical React project structure:
-
----
-
-## 📁 Folder Structure
-
-```
-src/
-├── components/
-│   ├── LandingPage.jsx
-│   ├── LoginPage.jsx
-│   ├── SignupPage.jsx
-├── styles/
-│   └── global.css
-├── App.jsx
-└── index.js
-```
-
----
-
-## 🧩 `src/App.jsx`
-
-```jsx
-import React, { useState } from 'react';
-import LandingPage from './components/LandingPage';
-import LoginPage from './components/LoginPage';
-import SignupPage from './components/SignupPage';
-import './styles/global.css';
-
-const App = () => {
-  const [currentPage, setCurrentPage] = useState('landing');
-  const [userRole, setUserRole] = useState(null);
-
-  const navigate = (page, role = null) => {
-    setCurrentPage(page);
-    setUserRole(role);
-  };
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'landing':
-        return <LandingPage navigate={navigate} />;
-      case 'login':
-        return <LoginPage role={userRole} navigate={navigate} />;
-      case 'signup':
-        return <SignupPage role={userRole} navigate={navigate} />;
-      default:
-        return <LandingPage navigate={navigate} />;
-    }
-  };
-
-  return <div className="app">{renderPage()}</div>;
-};
-
-export default App;
-```
-
----
-
-## 🧭 `src/components/LandingPage.jsx`
-
-```jsx
 import React from 'react';
 import { User, Settings, Wrench } from 'lucide-react';
 
@@ -75,7 +11,7 @@ const LandingPage = ({ navigate }) => {
       description: 'Access organizational reports and updates.',
       icon: User,
       color: '#38D200',
-      bgColor: 'rgba(56, 210, 0, 0.1)',
+      bgColor: 'rgba(56, 210, 0, 0.1)'
     },
     {
       id: 'admin',
@@ -83,7 +19,7 @@ const LandingPage = ({ navigate }) => {
       description: 'Manage users, reports, and approvals.',
       icon: Settings,
       color: '#0473EA',
-      bgColor: 'rgba(4, 115, 234, 0.1)',
+      bgColor: 'rgba(4, 115, 234, 0.1)'
     },
     {
       id: 'ops',
@@ -91,8 +27,8 @@ const LandingPage = ({ navigate }) => {
       description: 'Handle data syncing and storage operations.',
       icon: Wrench,
       color: '#38D200',
-      bgColor: 'rgba(56, 210, 0, 0.1)',
-    },
+      bgColor: 'rgba(56, 210, 0, 0.1)'
+    }
   ];
 
   return (
@@ -110,7 +46,10 @@ const LandingPage = ({ navigate }) => {
         <div className="role-cards">
           {roles.map((role) => (
             <div key={role.id} className="role-card">
-              <div className="role-icon-wrapper" style={{ backgroundColor: role.bgColor }}>
+              <div 
+                className="role-icon-wrapper"
+                style={{ backgroundColor: role.bgColor }}
+              >
                 <role.icon size={40} style={{ color: role.color }} />
               </div>
               <h2 className="role-title">{role.title}</h2>
@@ -126,56 +65,76 @@ const LandingPage = ({ navigate }) => {
           ))}
         </div>
 
-        <footer className="landing-footer">© 2025 RW Tool — All Rights Reserved.</footer>
+        <footer className="landing-footer">
+          © 2025 RW Tool — All Rights Reserved.
+        </footer>
       </div>
     </div>
   );
 };
 
 export default LandingPage;
-```
 
----
 
-## 🔐 `src/components/LoginPage.jsx`
 
-```jsx
+LoginPage
+
 import React, { useState } from 'react';
-import { ArrowRight, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 const LoginPage = ({ role, navigate }) => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
 
   const roleConfig = {
     user: { color: '#38D200', title: 'User Login' },
     admin: { color: '#0473EA', title: 'Admin Login' },
-    ops: { color: '#38D200', title: 'Ops Login' },
+    ops: { color: '#38D200', title: 'Ops Login' }
   };
 
   const config = roleConfig[role];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
-    if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
     return newErrors;
   };
 
   const handleSubmit = () => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length === 0) {
+      console.log('Login successful:', { role, ...formData });
       alert(`${config.title} successful! (Demo)`);
-    } else setErrors(newErrors);
+    } else {
+      setErrors(newErrors);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
   };
 
   return (
@@ -184,7 +143,7 @@ const LoginPage = ({ role, navigate }) => {
         <button className="back-button" onClick={() => navigate('landing')}>
           ← Back
         </button>
-
+        
         <div className="auth-header">
           <h1 className="auth-title">{config.title}</h1>
           <p className="auth-subtitle">Enter your credentials to continue</p>
@@ -192,32 +151,36 @@ const LoginPage = ({ role, navigate }) => {
 
         <div className="auth-form">
           <div className="form-group">
-            <label>Email Address</label>
+            <label htmlFor="email" className="form-label">Email Address</label>
             <div className="input-wrapper">
               <Mail size={20} className="input-icon" />
               <input
                 type="email"
+                id="email"
                 name="email"
-                value={formData.email}
-                placeholder="user@example.com"
                 className={`form-input ${errors.email ? 'error' : ''}`}
+                placeholder="user@example.com"
+                value={formData.email}
                 onChange={handleChange}
+                onKeyPress={handleKeyPress}
               />
             </div>
             {errors.email && <span className="error-text">{errors.email}</span>}
           </div>
 
           <div className="form-group">
-            <label>Password</label>
+            <label htmlFor="password" className="form-label">Password</label>
             <div className="input-wrapper">
               <Lock size={20} className="input-icon" />
               <input
                 type={showPassword ? 'text' : 'password'}
+                id="password"
                 name="password"
-                value={formData.password}
-                placeholder="••••••••"
                 className={`form-input ${errors.password ? 'error' : ''}`}
+                placeholder="••••••••"
+                value={formData.password}
                 onChange={handleChange}
+                onKeyPress={handleKeyPress}
               />
               <button
                 type="button"
@@ -230,15 +193,23 @@ const LoginPage = ({ role, navigate }) => {
             {errors.password && <span className="error-text">{errors.password}</span>}
           </div>
 
-          <button className="submit-button" style={{ backgroundColor: config.color }} onClick={handleSubmit}>
+          <button
+            className="submit-button"
+            style={{ backgroundColor: config.color }}
+            onClick={handleSubmit}
+          >
             Login <ArrowRight size={20} />
           </button>
         </div>
 
         <div className="auth-footer">
           <p>
-            Don’t have an account?{' '}
-            <button className="link-button" style={{ color: config.color }} onClick={() => navigate('signup', role)}>
+            Don't have an account?{' '}
+            <button
+              className="link-button"
+              style={{ color: config.color }}
+              onClick={() => navigate('signup', role)}
+            >
               Sign up
             </button>
           </p>
@@ -249,48 +220,12 @@ const LoginPage = ({ role, navigate }) => {
 };
 
 export default LoginPage;
-```
-
----
-
-## 🧾 `src/components/SignupPage.jsx`
-
-*(This is identical to your original but modularized — same validation and layout)*
-You can copy your `SignupPage` component from your code and paste it here.
-
----
-
-## 🎨 `src/styles/global.css`
-
-This contains the entire big CSS block you had at the bottom of your original file.
-Just copy all of it into a new file:
-
-```css
-/* Paste all your CSS styles here from the "styles" constant */
-```
-
----
-
-## ⚙️ `src/index.js`
-
-```js
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
-```
-
----
-
-Would you like me to also **add routing with React Router (v6)** instead of your manual `navigate` function?
-That would make the app scalable with proper URLs (like `/login/user` or `/signup/admin`).
 
 
+SignupPage.js
 
-  import React, { useState } from 'react';
-import { ArrowRight, Mail, Lock, Eye, EyeOff, User, Building2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { User, Mail, Lock, Eye, EyeOff, Building2, ArrowRight } from 'lucide-react';
 
 const SignupPage = ({ role, navigate }) => {
   const [formData, setFormData] = useState({
@@ -310,25 +245,37 @@ const SignupPage = ({ role, navigate }) => {
     ops: { color: '#38D200', title: 'Ops Registration', needsOrg: false }
   };
 
-  const config = roleConfig[role] || roleConfig.user;
+  const config = roleConfig[role];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
-    if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-    if (formData.password !== formData.confirmPassword)
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
-    if (config.needsOrg && !formData.organization.trim())
+    }
+    if (config.needsOrg && !formData.organization.trim()) {
       newErrors.organization = 'Organization is required';
+    }
     return newErrors;
   };
 
@@ -338,7 +285,15 @@ const SignupPage = ({ role, navigate }) => {
       console.log('Signup successful:', { role, ...formData });
       alert(`${config.title} successful! Please login.`);
       navigate('login', role);
-    } else setErrors(newErrors);
+    } else {
+      setErrors(newErrors);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
   };
 
   return (
@@ -355,32 +310,36 @@ const SignupPage = ({ role, navigate }) => {
 
         <div className="auth-form">
           <div className="form-group">
-            <label className="form-label">Full Name</label>
+            <label htmlFor="name" className="form-label">Full Name</label>
             <div className="input-wrapper">
               <User size={20} className="input-icon" />
               <input
                 type="text"
+                id="name"
                 name="name"
                 className={`form-input ${errors.name ? 'error' : ''}`}
                 placeholder="John Doe"
                 value={formData.name}
                 onChange={handleChange}
+                onKeyPress={handleKeyPress}
               />
             </div>
             {errors.name && <span className="error-text">{errors.name}</span>}
           </div>
 
           <div className="form-group">
-            <label className="form-label">Email Address</label>
+            <label htmlFor="email" className="form-label">Email Address</label>
             <div className="input-wrapper">
               <Mail size={20} className="input-icon" />
               <input
                 type="email"
+                id="email"
                 name="email"
                 className={`form-input ${errors.email ? 'error' : ''}`}
                 placeholder="user@example.com"
                 value={formData.email}
                 onChange={handleChange}
+                onKeyPress={handleKeyPress}
               />
             </div>
             {errors.email && <span className="error-text">{errors.email}</span>}
@@ -388,18 +347,20 @@ const SignupPage = ({ role, navigate }) => {
 
           {config.needsOrg && (
             <div className="form-group">
-              <label className="form-label">
+              <label htmlFor="organization" className="form-label">
                 {role === 'user' ? 'Organization to Subscribe' : 'Organization Name'}
               </label>
               <div className="input-wrapper">
                 <Building2 size={20} className="input-icon" />
                 <input
                   type="text"
+                  id="organization"
                   name="organization"
                   className={`form-input ${errors.organization ? 'error' : ''}`}
                   placeholder="Acme Corp"
                   value={formData.organization}
                   onChange={handleChange}
+                  onKeyPress={handleKeyPress}
                 />
               </div>
               {errors.organization && <span className="error-text">{errors.organization}</span>}
@@ -407,16 +368,18 @@ const SignupPage = ({ role, navigate }) => {
           )}
 
           <div className="form-group">
-            <label className="form-label">Password</label>
+            <label htmlFor="password" className="form-label">Password</label>
             <div className="input-wrapper">
               <Lock size={20} className="input-icon" />
               <input
                 type={showPassword ? 'text' : 'password'}
+                id="password"
                 name="password"
                 className={`form-input ${errors.password ? 'error' : ''}`}
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
+                onKeyPress={handleKeyPress}
               />
               <button
                 type="button"
@@ -430,16 +393,18 @@ const SignupPage = ({ role, navigate }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Confirm Password</label>
+            <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
             <div className="input-wrapper">
               <Lock size={20} className="input-icon" />
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
+                id="confirmPassword"
                 name="confirmPassword"
                 className={`form-input ${errors.confirmPassword ? 'error' : ''}`}
                 placeholder="••••••••"
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                onKeyPress={handleKeyPress}
               />
               <button
                 type="button"
@@ -481,257 +446,322 @@ const SignupPage = ({ role, navigate }) => {
 export default SignupPage;
 
 
+App.js
+
+import React, { useState } from 'react';
+import LandingPage from './components/LandingPage';
+import LoginPage from './components/LoginPage';
+import SignupPage from './components/SignupPage';
+import './styles/styles.css';
+
+const App = () => {
+  const [currentPage, setCurrentPage] = useState('landing');
+  const [userRole, setUserRole] = useState(null);
+
+  const navigate = (page, role = null) => {
+    setCurrentPage(page);
+    setUserRole(role);
+  };
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'landing':
+        return <LandingPage navigate={navigate} />;
+      case 'login':
+        return <LoginPage role={userRole} navigate={navigate} />;
+      case 'signup':
+        return <SignupPage role={userRole} navigate={navigate} />;
+      default:
+        return <LandingPage navigate={navigate} />;
+    }
+  };
+
+  return <div className="app">{renderPage()}</div>;
+};
+
+export default App;
 
 
 
+styles.css
 
-
-
-
-
-
-
-        /* ==========================
-   Global Styles
-   ========================== */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  font-family: "Inter", sans-serif;
-  background-color: #f7f9fc;
-  color: #1f2937;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
 }
 
-/* ==========================
-   Landing Page
-   ========================== */
-.landing-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #e3fcef 0%, #f0f9ff 100%);
+}
+
+/* Landing Page Styles */
+.landing-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 2rem;
 }
 
 .landing-content {
-  text-align: center;
-  max-width: 900px;
+  max-width: 1200px;
+  width: 100%;
 }
 
 .landing-header {
-  margin-bottom: 2rem;
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
 .landing-title {
-  font-size: 2.5rem;
+  font-size: 3rem;
+  color: #2d3748;
+  margin-bottom: 1rem;
   font-weight: 700;
 }
 
 .brand-name {
-  color: #0473ea;
+  color: #38D200;
 }
 
 .landing-subtitle {
-  color: #4b5563;
-  font-size: 1.1rem;
-  margin-top: 0.5rem;
+  font-size: 1.25rem;
+  color: #718096;
 }
 
 .role-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
 }
 
 .role-card {
   background: white;
-  border-radius: 1rem;
-  padding: 2rem 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .role-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
 .role-icon-wrapper {
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  margin: 0 auto 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
 .role-title {
-  font-size: 1.2rem;
+  font-size: 1.75rem;
+  color: #2d3748;
+  margin-bottom: 1rem;
   font-weight: 600;
-  margin-top: 0.5rem;
 }
 
 .role-description {
-  color: #6b7280;
-  font-size: 0.9rem;
-  margin: 0.5rem 0 1rem;
+  color: #718096;
+  margin-bottom: 2rem;
+  line-height: 1.6;
 }
 
 .role-button {
-  color: white;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
   border: none;
-  padding: 0.6rem 1.2rem;
   border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease, transform 0.2s ease;
 }
 
 .role-button:hover {
   opacity: 0.9;
+  transform: scale(1.02);
 }
 
 .landing-footer {
-  font-size: 0.8rem;
-  color: #9ca3af;
-  margin-top: 3rem;
+  text-align: center;
+  color: #718096;
+  font-size: 0.875rem;
 }
 
-/* ==========================
-   Auth Pages (Login / Signup)
-   ========================== */
+/* Auth Pages Styles */
 .auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f0f9ff, #e3fcef);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 2rem;
 }
 
 .auth-box {
   background: white;
-  border-radius: 1rem;
-  padding: 2rem;
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 480px;
   width: 100%;
-  max-width: 420px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  position: relative;
 }
 
 .back-button {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
   background: none;
   border: none;
-  color: #0473ea;
-  font-weight: 500;
+  color: #718096;
   cursor: pointer;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.back-button:hover {
+  color: #2d3748;
 }
 
 .auth-header {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
 }
 
 .auth-title {
-  font-size: 1.8rem;
+  font-size: 2rem;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
   font-weight: 700;
 }
 
 .auth-subtitle {
-  color: #6b7280;
+  color: #718096;
   font-size: 0.95rem;
-  margin-top: 0.3rem;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .form-group {
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .form-label {
-  display: block;
+  color: #2d3748;
   font-weight: 500;
-  margin-bottom: 0.4rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 .input-wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .input-icon {
   position: absolute;
-  top: 50%;
-  left: 12px;
-  transform: translateY(-50%);
-  color: #9ca3af;
+  left: 1rem;
+  color: #718096;
+  pointer-events: none;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.7rem 0.9rem 0.7rem 2.5rem;
-  border: 1px solid #d1d5db;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  border: 2px solid #e2e8f0;
   border-radius: 8px;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-input:focus {
-  border-color: #0473ea;
+  outline: none;
+  border-color: #38D200;
+  box-shadow: 0 0 0 3px rgba(56, 210, 0, 0.1);
 }
 
 .form-input.error {
-  border-color: #dc2626;
-}
-
-.error-text {
-  color: #dc2626;
-  font-size: 0.8rem;
-  margin-top: 0.2rem;
+  border-color: #e53e3e;
 }
 
 .password-toggle {
   position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 1rem;
   background: none;
   border: none;
-  color: #6b7280;
+  color: #718096;
   cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+  color: #2d3748;
+}
+
+.error-text {
+  color: #e53e3e;
+  font-size: 0.75rem;
+  margin-top: -0.25rem;
 }
 
 .submit-button {
   width: 100%;
-  color: white;
+  padding: 1rem;
   border: none;
-  padding: 0.75rem;
   border-radius: 8px;
-  font-weight: 600;
+  color: white;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  transition: opacity 0.2s ease;
+  gap: 0.5rem;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+  margin-top: 0.5rem;
 }
 
 .submit-button:hover {
   opacity: 0.9;
+  transform: scale(1.01);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #718096;
+  font-size: 0.875rem;
 }
 
 .link-button {
@@ -739,13 +769,34 @@ body {
   border: none;
   cursor: pointer;
   font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
 }
 
-.auth-footer {
-  text-align: center;
-  margin-top: 1.5rem;
-  color: #6b7280;
-  font-size: 0.9rem;
+.link-button:hover {
+  opacity: 0.8;
+  text-decoration: underline;
 }
 
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .landing-title {
+    font-size: 2rem;
+  }
 
+  .landing-subtitle {
+    font-size: 1rem;
+  }
+
+  .role-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-box {
+    padding: 2rem;
+  }
+
+  .auth-title {
+    font-size: 1.5rem;
+  }
+}
